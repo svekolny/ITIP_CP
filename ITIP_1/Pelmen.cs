@@ -7,9 +7,10 @@ using System.Threading.Tasks;
 
 namespace ITIP_1
 {
-    internal sealed class Pelmen : Dumpling
+    internal sealed class Pelmen : Dumpling, IRound
     {
         bool isFried;
+        public double diameter { get { return 3.2; } }
 
         override public uint Size
         {
@@ -31,6 +32,8 @@ namespace ITIP_1
 
         public Pelmen(uint size, uint weight) : base(size, weight) { isFried = false; }
         public Pelmen(uint size, uint weight, bool hasCoriander) : base(size, weight, hasCoriander) { isFried = false; }
+
+        public string Roll () { return "Пельмень катится..."; }
 
         override public bool Boil()
         {

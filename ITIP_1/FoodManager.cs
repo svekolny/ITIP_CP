@@ -74,6 +74,10 @@ namespace ITIP_1
 
             uint choice = SuggestActionsHierarchy();
 
+            Action HierarchyDelegateNonReturn; // Поддерживаает функции, не возвращающие значения
+            Func<bool> HierarchyDelegateBool; // Поддерживает функции, возвращающие значения bool
+            Func<string> HierarchyDelegateString; // Поддерживает функции, возвращающие значения string
+
             while (choice != 0)
             {
                 switch (choice)
@@ -88,7 +92,8 @@ namespace ITIP_1
                             Console.WriteLine("Сначала дамплинг нужно создать!");
                             break;
                         }
-                        dumpling.CheckContent();
+                        HierarchyDelegateNonReturn = dumpling.CheckContent;
+                        HierarchyDelegateNonReturn();
                         break;
 
                     case 3:
@@ -97,7 +102,8 @@ namespace ITIP_1
                             Console.WriteLine("Сначала дамплинг нужно создать!");
                             break;
                         }
-                        dumpling.Boil();
+                        HierarchyDelegateBool = dumpling.Boil;
+                        HierarchyDelegateBool();
                         break;
 
                     case 4:
@@ -106,7 +112,8 @@ namespace ITIP_1
                             Console.WriteLine("Сначала дамплинг нужно создать!");
                             break;
                         }
-                        bool isEaten = dumpling.Eat();
+                        HierarchyDelegateBool = dumpling.Eat;
+                        bool isEaten = HierarchyDelegateBool();
                         if (isEaten) dumpling = null;
                         break;
 
@@ -119,22 +126,23 @@ namespace ITIP_1
                         string type = dumpling.GetType().Name;
                         if (type == "Khinkali")
                         {
-                            Khinkali.GetPerfectRecipe();
+                            HierarchyDelegateNonReturn = Khinkali.GetPerfectRecipe;
+                            HierarchyDelegateNonReturn();
                         }
                         else if (type == "Pelmen")
                         {
-                            Pelmen pelmen = (Pelmen)dumpling;
-                            pelmen.Fry();
+                            HierarchyDelegateBool = ((Pelmen)dumpling).Fry;
+                            HierarchyDelegateBool();
                         }
                         else if (type == "Ravioli")
                         {
-                            Ravioli ravioli = (Ravioli)dumpling;
-                            ravioli.AdmireItalianCuisine();
+                            HierarchyDelegateNonReturn = ((Ravioli)dumpling).AdmireItalianCuisine;
+                            HierarchyDelegateNonReturn();
                         }
                         else if (type == "Varenik")
                         {
-                            Varenik varenik = (Varenik)dumpling;
-                            string quality = varenik.GetFillingQuality();
+                            HierarchyDelegateString = ((Varenik)dumpling).GetFillingQuality;
+                            string quality = HierarchyDelegateString();
                             Console.WriteLine($"Вам кажется, что у этого вареника {quality} качество");
                         }
                         else Console.WriteLine("Ошибочка вышла");
@@ -145,7 +153,8 @@ namespace ITIP_1
                             Console.WriteLine("Сначала дамплинг нужно создать!");
                             break;
                         }
-                        dumpling.GetClassName();
+                        HierarchyDelegateNonReturn = dumpling.GetClassName;
+                        HierarchyDelegateNonReturn();
                         break;
 
                     case 0:
@@ -168,6 +177,8 @@ namespace ITIP_1
             IEatable? chosenElement = ChooseInterfaceElement();
             uint choiceAction;
 
+            Action<IEatable> InterfaceDelegate;
+
             eatables[ChoosePlace(eatables)] = chosenElement;
 
             while (chosenElement is not null)
@@ -182,17 +193,20 @@ namespace ITIP_1
                     case 2:
                         uint place = ChoosePlace(eatables);
                         if (eatables[place] is null) { Console.WriteLine("Ячейка пуста"); break; }
-                        ShowCookingTime(eatables[place]);
+                        InterfaceDelegate = ShowCookingTime;
+                        InterfaceDelegate(eatables[place]);
                         break;
                     case 3:
                         place = ChoosePlace(eatables);
                         if (eatables[place] is null) { Console.WriteLine("Ячейка пуста"); break; }
-                        ShowDishDescription(eatables[place]);
+                        InterfaceDelegate = ShowDishDescription;
+                        InterfaceDelegate(eatables[place]);
                         break;
                     case 4:
                         place = ChoosePlace(eatables);
                         if (eatables[place] is null) { Console.WriteLine("Ячейка пуста"); break; }
-                        ShowDishRating(eatables[place]);
+                        InterfaceDelegate = ShowDishRating;
+                        InterfaceDelegate(eatables[place]);
                         break;
                     case 5:
                         place = ChoosePlace(eatables);
